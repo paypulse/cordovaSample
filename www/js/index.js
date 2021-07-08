@@ -17,25 +17,94 @@
  * under the License.
  */
 
+
+
+/**
+ * Gloval 변수
+ * **/
+var fileAddressUrl = "http://192.168.50.213:8082/edulab/menuItem/sampeDownload";
+var fileServerUrl ="http://211.34.230.55/atest/A.zip";
+
+var saveFilePath;
+
+//app.initialize();
+
 // Wait for the deviceready event before using any of Cordova's device APIs.
 // See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
 
 function onDeviceReady() {
+    // 모든 기능이 여기에서 이뤄 져야 함
+    saveFilePath = cordova.file.externalDataDirectory;
 
-
+    //앱을 실행 했을때
+    fileUrlApiCall();
 }
 
 /****
- * file url api 호출
+ * file url file download
  */
+var StatusCallback = function(status){
+    alert(status);
+    if(status == 0){
+        // Everything OK
+         window.open(saveFilePath+"A/1/index.html",'_blank','location=yes');
+    }else if(status == -1){
+        // Everything is wrong ...
+    }
+};
+
+// Handle the progress of the decompression
+var ProgressCallback = function(progressEvent){
+
+    var percent =  Math.round((progressEvent.loaded / progressEvent.total) * 100);
+
+    // Display progress in the console : 8% ...
+    console.log(percent + "%");
+};
 function fileUrlApiCall(){
-    alert("test example example");
+    alert("How to use plugin library");
+    alert(fileServerUrl);
+    alert(saveFilePath);
+    var uri = encodeURI(fileServerUrl);
+    alert(uri);
+
+
+    var fileTransfer = new FileTransfer();
+    alert(fileTransfer);
+    fileTransfer.download(
+        uri, saveFilePath + "A.zip", function(entry) {
+            alert("download complete: ");
+            // alert(JSON.stringify(entry));
+            /**
+             * Unzip
+             * **/
+            var zipPath = saveFilePath + "A.zip";
+            var zipExtractDirectory = saveFilePath;
+            window.zip.unzip(zipPath, zipExtractDirectory, StatusCallback, ProgressCallback);
+        },
+        function(error) {
+
+            alert(JSON.stringify(error));
+            alert("download error source ");
+
+        },
+        false, {
+            headers: {
+                "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+            }
+        }
+    );
+
+
+
 }
+
+
 
 /**
  * Document ready
  * */
-document.addEventListener("DOMContentLoaded", function(){
-    fileUrlApiCall();
-});
+// document.addEventListener("DOMContentLoaded", function(){
+//     fileUrlApiCall();
+// });
