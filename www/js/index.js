@@ -37,6 +37,10 @@ function onDeviceReady() {
     // 모든 기능이 여기에서 이뤄 져야 함
     saveFilePath = cordova.file.externalDataDirectory;
 
+
+    //device 종류
+    alert(device.platform);
+
     //앱을 실행 했을때
     fileUrlApiCall();
 }
@@ -72,6 +76,10 @@ function fileUrlApiCall(){
 
     var fileTransfer = new FileTransfer();
     alert(fileTransfer);
+
+    //파일이 있는지 여부 체크
+
+
     fileTransfer.download(
         uri, saveFilePath + "A.zip", function(entry) {
             alert("download complete: ");
